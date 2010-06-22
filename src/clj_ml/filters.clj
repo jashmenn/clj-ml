@@ -113,6 +113,16 @@
                   (dissoc options :invert))]
        (make-filter-options :remove-attributes opts))))
 
+(defmethod make-filter-options :normalize
+   ([kind m]
+     (let [cols-val-a (check-options {:unset-class "-unset-class-temporarily"}
+                                     m
+                                     [""])
+           cols-val-b (check-option-values {:scale "-S"
+                                      :translation "-T"}
+                                     m
+                                     cols-val-a)]
+       (into-array cols-val-b))))
 
 ;; Creation of filters
 
@@ -293,6 +303,11 @@
 (defmethod make-filter :project-attributes
   ([kind options]
      (make-filter-m kind options weka.filters.unsupervised.attribute.Remove)))
+
+(defmethod make-filter :normalize
+  ([kind options]
+     (make-filter-m kind options weka.filters.unsupervised.attribute.Normalize)))
+
 
 ;; Processing the filtering of data
 
